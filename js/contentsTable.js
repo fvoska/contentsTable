@@ -5,6 +5,7 @@
  * It is ideally used on web-pages that have a lot of text which is separated into chapters.
  *
  * Created by Filip Voska (filip.voska@gmail.com).
+ * contentsTable is released under The MIT License (MIT)
  */
 
 function contentsTableCreator(levels, table, selectors)
