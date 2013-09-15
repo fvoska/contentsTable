@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html> 
+<html lang="en">
+	<head>
+	<meta charset="utf-8" />  
+	<title>Contents Table Example</title>
+	<script type="text/javascript" src="js/contentsTable.js"></script>
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700,300italic' rel='stylesheet' type='text/css'>
+	<script type="text/javascript">
+	
+		// shoot when everything is ready
+		$(document).ready(function()
+		{
+			// create Contents Table object
+			var contentsTable = new contentsTableCreator(["cT-title","cT-level1","cT-level2"], "cT-table", "h1,h2,h3");
+			// we are finished as far as Contents Table goes. Code below is just some styling and positioning of the table itself.
+			
+			// make sure everything is aligned properly when first loaded
+			if($(window).width()<1100)
+			{
+				// margin: top right bottom left
+				$("#contents").css("margin", "0 315px 0 0");
+				$(".cT-table").css("left", "730px");
+				$(".cT-table").css("right", "auto");
+				$(".cT-table").css("position", "absolute");
+			}
+			else
+			{
+				$("#contents").css("margin", "auto");
+				$(".cT-table").css("left", "auto");
+				$(".cT-table").css("right", "25px");
+				$(".cT-table").css("position", "fixed");
+			}			
+			
+			// keep it aligned when resizing
+			$(window).resize(function()
+			{
+				if($(window).width()<1100)
+				{
+					$("#contents").css("margin", "0 315px 0 0");
+					$(".cT-table").css("left", "730px");
+					$(".cT-table").css("right", "auto");
+					$(".cT-table").css("position", "absolute");
+				}
+				else
+				{
+					$("#contents").css("margin", "auto");
+					$(".cT-table").css("left", "auto");
+					$(".cT-table").css("right", "25px");
+					$(".cT-table").css("position", "fixed");
+				}
+			});
+			
+			// animate scrolling when clicking on Anchors
+			$('a').click(function()
+			{
+				$('html, body').animate(
+				{
+					scrollTop: $( $.attr(this, 'href') ).offset().top
+				}, 250);
+				return false;
+			});
+		});
+	</script>
+	<link type="text/css" href="style.css" rel="stylesheet">
+	</head>
+	
+	<body>
+		<div id="contents">
+		<div id="contentsTableInfo">
+			<center><h1>Table of Contents in JavaScript</h1></center>
+			<p style="padding: 0; font-size: 16pt;">Contents Table is a JavaScript object that creates a Table of Contents based on classes that you assign to desired HTML Tags. Clicking on a Table of Contents link scrolls to the anchor. This web-page is an example in and of itself, but let me break it down for you.</p>
+			<p style="padding: 0; font-size: 16pt;">Created by: <a href="mailto:filip.voska@gmail.com?Subject=contentsTable" target="_blank">Filip Voska</a></p>
+			
+			<center><a class="dl" target="_blank" href="js/contentsTable.js">DOWNLOAD</a><p style="padding: 0;">Current version: 1.0</p></center>
+			
+			Here's the procedure:
+			<ul>
+				HTML side of things:
+				<li>Write your web-page as you normally would. Put in your titles, subtitles and organize the text nicely</li>
+				<li>Decide which elements you'd like to put in Table of Contents. You can choose multiple levels of organization like Titles, Subtitles, Chapters, etc. Make up a name for each one of those levels that we will use for class names.
+					<ul>
+						<li>In this example, we used <span class="code">cT-title</span>, <span class="code">cT-level1</span> and <span class="code">cT-level2</span></li> for headings and chapters. You can name these classes anything you like. However, try and keep the naming logical and hierarchical. I used <span class="code">cT-title</span> because it will be applied to Heading. After Heading, I have several chapters (<span class="code">cT-level1</span>) that have sub-chapters (<span class="code">cT-level2</span>)
+					</ul>
+				</li>
+				<li>Now add these classes to desired elements. You can have multiple classes assigned to one element, script checks for that. However, you shouldn't assign two different level classes to same element - it doesn't even make sense. In case you do this by mistake, script will still work, using the first class while ignoring the others.</li>
+				<li>Where will Table of Contents be placed anyway? Well, now is a good time to choose one element in which the table will be inserted. Assign it unique ID. I chose a <span class="code">&lt;div&gt;</span> element and styled it a bit - it is floating in the right-hand side of the web-page</li>
+				<hr />
+				A bit of JS:
+				<li>Add this one line of JS after your page is done loading, either in <span class="code">onload</span> or <span class="code">$(document).ready()</span>. I used jQuery way in this example:</li>
+				<div class="code">
+				$(document).ready(function(){var contentsTable = new contentsTableCreator(["cT-title","cT-level1","cT-level2"], 'cT-table');</div>
+				<div>This will create contentsTable object, using the following arguments:
+				<ul>
+					<li><span class="code">levels</span> - an array of levels that we chose. In our example, it is <span class="code">["cT-title","cT-level1","cT-level2"]</span>. You can order these in any way that you want</li>
+					<li><span class="code">table</span> - ID of table element in which the Table of Contents will be inserted</li>
+					<li><span class="code">selectors</span> - this is a list of elements that the script will be looping through and checking their class names and is used by jQuery. You can leave this argument out and the script will automatically find all the elements. You can save some processing time if you assign selectors manually.
+					<ul>
+						<li>In this example, I included only the following tags, as they are the only ones I used: <span class="code">&lt;h1&gt;</span>, <span class="code">&lt;h2&gt;</span>, <span class="code">&lt;h3&gt;</span>. You build the list by listing the tags without the angle brackets and you delimit tags with comma, like so: <span class="code">"h1,h2,h3"</span>
+						</li>
+					</li>
+				</ul></div>
+				<hr />
+				Styling in CSS:
+				<li>You can style the chosen level classes as you would usually</li>
+				<li>Additionally, script assigns classes to Table of Contents links, so that you can style them as well. Assigned classes will be named the same as level classes, they will only have "-table" appended to their name. Of course, you can style these as you want.
+					<ul>
+						<li>In this example, we have level classes <span class="code">cT-title</span>, <span class="code">cT-level1</span> and <span class="code">cT-level2</span>, as mentioned before. Script generated classes <span class="code">cT-title<b>-table</b></span>, <span class="code">cT-level1<b>-table</b></span> and <span class="code">cT-level2<b>-table</b></span>. I styled them simply by adding some padding on the left side and chaning the font, so that the hierarchy is a bit more visible</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		
+		<h1 class="cT-title someOtherStyling1">Heading</h1>
+			<h2 class="cT-level1 someOtherStyling2">Chapter 1</h2>
+				<h3 class="cT-level2">Lorem Ipsum 1</h3>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum vel nibh at elit auctor sollicitudin eu in leo. Quisque fringilla quam vel enim sollicitudin placerat. Maecenas aliquet lacinia dui in feugiat. Duis massa quam, eleifend a quam vitae, ultricies mattis erat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras tempus, ligula quis hendrerit aliquam, felis elit suscipit nulla, non tincidunt augue odio eget diam. Duis vehicula elit metus, id ultricies purus molestie at. Integer enim diam, commodo vitae lectus congue, lobortis convallis sapien. Proin suscipit mollis dignissim.</p>
+				<h3 class="cT-level2">Lorem Ipsum 2</h3>
+					<p>Duis quis massa non massa elementum iaculis. In et tortor id est tempus pellentesque eget et purus. Nunc accumsan felis eget imperdiet lobortis. Aenean pulvinar, augue quis posuere molestie, erat diam volutpat velit, eu fermentum ligula arcu ac leo. Ut quis vulputate urna. Vestibulum eu vulputate eros. Maecenas eget tortor eget libero pharetra faucibus vel accumsan diam. Aliquam bibendum tellus in magna molestie, quis vestibulum felis vulputate. Suspendisse vel porttitor eros. Fusce id lacus et quam elementum convallis ac ac diam. Nullam viverra, velit vitae pulvinar cursus, turpis augue feugiat turpis, nec laoreet tortor diam quis purus. Nam convallis viverra sem non accumsan. Donec eleifend, felis nec vehicula blandit, turpis elit lacinia ligula, in vulputate erat nulla in nisi. Sed luctus eget nisl sit amet lacinia.</p>
+			<h2 class="cT-level1">Chapter 2</h2>
+				<h3 class="cT-level2">Lorem Ipsum 3</h3>
+					<p>Integer commodo nisl eget neque imperdiet ullamcorper. Aliquam accumsan, felis at mattis pharetra, lectus nisl varius diam, ac varius sapien libero eu mauris. Pellentesque lobortis, leo a ullamcorper mollis, purus nisl semper odio, eget semper erat elit a nisl. Aenean volutpat massa nec lacus elementum cursus. Duis ultricies, nunc ac tempus faucibus, odio elit tincidunt tortor, dictum lacinia est est mattis purus. Mauris faucibus tellus vitae vestibulum porta. Etiam euismod est ac lorem lacinia, eget dignissim ante luctus. Vestibulum vel mi quis velit laoreet vestibulum. Suspendisse nec cursus sem, nec semper velit. Nulla sit amet mattis ipsum, nec pellentesque diam. Sed ut viverra risus.</p>
+			<h2 class="cT-level1">Chapter 3</h2>
+				<h3 class="cT-level2">Lorem Ipsum 4</h3>
+					<p>Nulla pellentesque leo id tristique rhoncus. Integer mi sem, tempus eu auctor eu, interdum id nisl. Aenean rutrum porta justo, id lacinia ipsum consectetur sit amet. Praesent at nibh libero. Donec congue quam luctus lorem viverra, non interdum augue ullamcorper. Sed aliquam ullamcorper magna at pellentesque. Donec interdum eget dui sed pharetra. Curabitur luctus tellus eget metus molestie, eu fringilla velit vestibulum. Integer consequat lectus eget lacus aliquet, at venenatis massa molestie. Phasellus eros tortor, facilisis sed ante sed, gravida venenatis turpis. Sed ornare ac est ac fermentum.</p>
+				<h3 class="cT-level2">Lorem Ipsum 5</h3>
+					<p>Praesent felis mi, euismod sit amet justo quis, cursus bibendum libero. Ut vel nunc elit. In porttitor nunc sed massa lobortis, eu luctus odio molestie. Etiam malesuada libero ultrices elit aliquam facilisis. Nullam pretium sapien non felis egestas, vel aliquet metus varius. Vivamus eu faucibus nisl, in auctor tortor. Pellentesque vitae eros pharetra, sodales nunc sed, accumsan orci. Sed eu justo in lectus luctus varius non ut lacus. Curabitur vitae dolor non dui venenatis elementum et id eros. Etiam iaculis turpis eget euismod vulputate. Vestibulum sagittis enim vel orci cursus, in vulputate quam porttitor. Phasellus id dictum lacus, ac consequat turpis. Donec nulla neque, luctus vel nibh eget, congue cursus nisi. Sed nibh quam, tempus sed sapien a, mollis tincidunt lorem. Ut tincidunt tellus vel iaculis consequat. Nullam risus dui, vehicula sit amet egestas sed, cursus congue metus.</p>
+		</div>
+		<div class="cT-table">
+			<center><h2>Table of Contents</h2></center>
+		</div>
+	</body>
+</html>
